@@ -1,0 +1,7 @@
+<h1>Ingresar al Sistema</h1>
+
+<form method="POST">{% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">Ingresar</button>
+    <a href="{% url 'users_app:crear_usuario' %}">Crear Usuario</a>
+</form>

@@ -1,0 +1,7 @@
+<h1>Bienvenido al Sistema</h1>
+
+<p><b>Usuario : </b> {{request.user}} <br></p>   
+
+<li><a href="{% url 'users_app:logout' %}">Cerrar sesion</a></li>
+<li><a href="">Actualizar Datos</a></li>
+<li><a href="{% url 'users_app:update_password' %}">Actualizar Contraseña</a></li>
