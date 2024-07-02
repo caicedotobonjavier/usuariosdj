@@ -8,8 +8,6 @@ from django.contrib.auth import authenticate
 
 
 class UserFomulario(forms.ModelForm):
-
-
     password1 = forms.CharField(
         required=True,
         label='Contraseña',
@@ -74,7 +72,6 @@ class UserFomulario(forms.ModelForm):
 
 
 class LoginForm(forms.Form):
-
     email = forms.EmailField(
         required=True,
         label='Correo Electronico',
@@ -110,7 +107,6 @@ class LoginForm(forms.Form):
 
 
 class UpdatePasswordForm(forms.Form):
-
     password1 = forms.CharField(
         required=True,
         label= 'Contraseña Actual',
@@ -120,7 +116,6 @@ class UpdatePasswordForm(forms.Form):
             }
         )
     )
-
 
     password2 = forms.CharField(
         required=True,
@@ -148,3 +143,14 @@ class UpdatePasswordForm(forms.Form):
             raise forms.ValidationError('Contraseña Actual Erronea')
         
         return self.cleaned_data
+
+
+class UpdateInfoUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = (
+            'full_name',
+            'direccion',
+            'imagen',
+            'genero',
+        )

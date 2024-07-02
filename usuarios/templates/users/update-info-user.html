@@ -1,0 +1,9 @@
+<h1>Acuatlizar Informacion</h1>
+
+<b>Usuario : </b> {{request.user}} <br>
+
+<form method="POST" enctype="multipart/form-data">{% csrf_token %}
+    {{form.as_p}}    
+    <p><button type="submit">Actualizar Informacion</button></p>
+</form>
+

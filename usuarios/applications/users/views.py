@@ -6,7 +6,7 @@ from .models import User
 #
 from django.views.generic import CreateView, FormView, View, UpdateView
 #
-from .forms import UserFomulario, LoginForm, UpdatePasswordForm
+from .forms import UserFomulario, LoginForm, UpdatePasswordForm, UpdateInfoUserForm
 #
 from django.contrib.auth import authenticate, login, logout
 #
@@ -100,3 +100,19 @@ class ActualizarPasswordView(FormView):
         logout(self.request)
 
         return super(ActualizarPasswordView, self).form_valid(form)
+
+
+
+class UpdateInfoUserView(UpdateView):
+    template_name = 'users/update-info-user.html'
+    form_class = UpdateInfoUserForm
+    success_url = reverse_lazy(
+        'home_app:index'
+    )
+
+
+    def get_queryset(self):
+        usuario = self.kwargs['pk']
+        resultado = User.objects.filter(id=usuario)
+        return resultado
+
