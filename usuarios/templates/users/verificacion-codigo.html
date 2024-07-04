@@ -1,0 +1,6 @@
+<h1>Verificar Codigo Para Activar Cuenta</h1>
+
+<form method="POST">{% csrf_token %}
+    {{form.as_p}}
+    <p><button type="submit">Verificar</button></p>
+</form>

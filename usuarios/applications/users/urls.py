@@ -12,4 +12,5 @@ urlpatterns = [
     #
     path('update-password/', views.ActualizarPasswordView.as_view(), name='update_password'),
     path('update-info/<pk>/', views.UpdateInfoUserView.as_view(), name='update_info'),
+    path('verificar-codigo/<pk>/', views.VerificacionCodigoView.as_view(), name='verificar_codigo'),
 ]

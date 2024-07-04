@@ -2,11 +2,15 @@ from django.http import HttpResponse
 #
 from django.shortcuts import render
 #
+from django.core.mail import send_mail
+#
 from .models import User
 #
 from django.views.generic import CreateView, FormView, View, UpdateView
 #
-from .forms import UserFomulario, LoginForm, UpdatePasswordForm, UpdateInfoUserForm
+from .forms import UserFomulario, LoginForm, UpdatePasswordForm, UpdateInfoUserForm, VerificacionForm
+#
+from .functions import code_generator
 #
 from django.contrib.auth import authenticate, login, logout
 #
@@ -21,21 +25,38 @@ class CrearUsuarioView(FormView):
     model = User
     #fields = ['email', 'full_name','direccion','imagen','genero']
     form_class = UserFomulario
-    success_url = reverse_lazy('users_app:crear_usuario')
+    success_url = reverse_lazy('users_app:login_usuario')
 
 
     def form_valid(self, form):
-
-        User.objects.create_user(
+        #generamos el codigo
+        codigo = code_generator()
+        #
+        usuario = User.objects.create_user(
             form.cleaned_data['email'],
             form.cleaned_data['password1'],
             full_name = form.cleaned_data['full_name'],            
             direccion = form.cleaned_data['direccion'],
             genero = form.cleaned_data['genero'],
             imagen = form.cleaned_data['imagen'],
+            codigo_registro = codigo,
         )
 
-        return super(CrearUsuarioView, self).form_valid(form)
+        #enviar codigo al email del usaurio con send_mail
+        asunto = 'Confirmacion de email'
+        mensaje = 'Codigo de verificacion es : ' + codigo
+        email_remitente = 'jacto2024@gmail.com'
+        #
+        send_mail(asunto, mensaje, email_remitente, [form.cleaned_data['email']],)
+        #redirigir a panta de confirmacion        
+        print('********************************************************')
+        print(usuario)
+        return HttpResponseRedirect(
+            reverse(
+                'users_app:verificar_codigo',
+                kwargs={'pk':usuario.id}
+            )
+        )
 
 
 
@@ -116,3 +137,28 @@ class UpdateInfoUserView(UpdateView):
         resultado = User.objects.filter(id=usuario)
         return resultado
 
+
+#
+class VerificacionCodigoView(FormView):
+    template_name = 'users/verificacion-codigo.html'
+    form_class = VerificacionForm
+    success_url = reverse_lazy('users_app:login_usuario')
+
+    #envia nuevo kwargs a nuestro formulario
+    def get_form_kwargs(self):
+        kwargs = super(VerificacionCodigoView, self).get_form_kwargs()
+        kwargs.update({'pk': self.kwargs['pk']})
+        return kwargs
+
+
+
+    def form_valid(self, form):   
+        #
+        User.objects.filter(
+            id=self.kwargs['pk']
+        ).update(
+            is_active=True
+        )
+        
+        return super(VerificacionCodigoView, self).form_valid(form)
+    

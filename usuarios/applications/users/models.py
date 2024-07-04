@@ -24,6 +24,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     direccion = models.CharField('Direccion Domicilio', max_length=50, blank=True, null=True)
     imagen = models.ImageField('Foto Perfil', upload_to='Usuarios',blank=True, null=True)
     genero = models.CharField('Genero', max_length=1, choices=CHOICES_GENERO, blank=True)
+    #campo para la verificacion de usaurio con correo
+    codigo_registro = models.CharField('Codigo Registro', max_length=6, blank=True)
 
 
     is_staff = models.BooleanField(default=False)

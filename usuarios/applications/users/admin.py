@@ -8,6 +8,7 @@ class UserAdmin(admin.ModelAdmin):
         'id',
         'email',
         'full_name',
+        'codigo_registro',
         'direccion',
         'imagen',
         'genero',

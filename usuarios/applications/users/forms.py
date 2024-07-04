@@ -154,3 +154,27 @@ class UpdateInfoUserForm(forms.ModelForm):
             'imagen',
             'genero',
         )
+
+
+class VerificacionForm(forms.Form):
+    codigo = forms.CharField(
+        required=True
+        )
+
+    #inicializamos el formulario con los nuevos datos que enviamos desde la vista
+    def __init__(self, pk, *args, **kwargs):     
+        self.id_user = pk
+        super(VerificacionForm, self).__init__(*args, **kwargs)
+
+
+    def clean_codido(self):
+        codigo_registro = self.cleaned_data['codigo']
+        id_user = self.id_user
+
+        if len(codigo_registro) == 6:
+            #verificacmos si el codigo y usuario son validos
+            activo = User.objects.codigo_valicacion(id_user, codigo_registro)
+            if not activo:
+                raise forms.ValidationError('Codigo de registro erroneo')
+        else:
+            raise forms.ValidationError('Codigo de registro erroneo')
